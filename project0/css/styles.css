@@ -93,7 +93,8 @@ p[id=aboutme]::selection {
 div ol {
   color: green;
 }
-div ul {
+
+div > ul {
   color: #3fada8;
 }
 

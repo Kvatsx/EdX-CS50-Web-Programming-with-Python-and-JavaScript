@@ -102,10 +102,10 @@ div {
     ol {
         color: green;
     }
+}
 
-    ul {
+div > ul {
         color: #3fada8;
-    }
 }
 
 table, th, td {
