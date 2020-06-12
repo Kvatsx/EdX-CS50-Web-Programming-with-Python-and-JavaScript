@@ -1,0 +1,20 @@
+.row-padding {
+    padding-bottom: 5px;
+}
+
+.bookTitle {
+    font-weight: bold;
+}
+
+.subtitle {
+    color:  #5d5d5d;
+}
+
+body {
+    padding: 80px 0px 0px 0px;
+    z-index: 0;
+}
+
+.card-custom {
+    max-width: 128px;
+}

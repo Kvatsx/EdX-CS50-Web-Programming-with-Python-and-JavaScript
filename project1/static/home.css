@@ -1,0 +1,27 @@
+.nav-custom-items {
+    color: white;
+}
+
+.welcome {
+    padding-right: 30px;
+    font-weight: bold;
+}
+
+.search-box {
+    padding-top: 50px;
+}
+
+.search-bar {
+    width: max-content;
+}
+
+.search-button {
+    float: right;
+    width: fit-content;
+}
+
+
+body {
+    padding: 80px 0px 0px 0px;
+    z-index: 0;
+}

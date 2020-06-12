@@ -1,24 +1,67 @@
+import csv
 import os
 
-from flask import Flask, render_template, request
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
 
-# Import table definitions.
-from models import *
-
-app = Flask(__name__)
-
-# Tell Flask what SQLAlchemy databas to use.
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-# Link the Flask app with the database (no Flask app is actually being run yet).
-db.init_app(app)
+engine = create_engine(os.getenv("DATABASE_URL"))
+db = scoped_session(sessionmaker(bind=engine))
 
 def main():
-    # Create tables based on each table definition in `models`
-    db.create_all()
+    create_tables()
+
+    f = open("books.csv")
+    reader = csv.reader(f)
+    for isbn, title, author, year in reader:
+
+        db.execute("INSERT INTO Books (isbn, title, author, year) VALUES (:isbn, :title, :author, :year)", {
+            "isbn": isbn,
+            "title": title,
+            "author": author,
+            "year": year
+        })
+    db.commit()
+
+
+def create_tables():
+
+    # Clean Database
+    db.execute("DROP TABLE Users;")
+    db.execute("DROP TABLE Books;")
+    db.execute("DROP TABLE Reviews;")
+
+    # Create Tables
+    db.execute('''
+        CREATE TABLE Users (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR NOT NULL,
+            email VARCHAR NOT NULL UNIQUE,
+            password VARCHAR NOT NULL
+        );
+    ''')
+
+    db.execute('''
+        CREATE TABLE Books (
+            isbn VARCHAR PRIMARY KEY,
+            title VARCHAR NOT NULL,
+            author VARCHAR NOT NULL,
+            year INTEGER NOT NULL
+        );
+    ''')
+
+    db.execute('''
+        CREATE TABLE Reviews (
+            id SERIAL PRIMARY KEY,
+            rating INTEGER NOT NULL,
+            title VARCHAR NOT NULL,
+            description VARCHAR NOT NULL,
+            reviewer_id INTEGER NOT NULL,
+            reviewer_name VARCHAR NOT NULL,
+            isbn VARCHAR NOT NULL
+        );
+    ''')
+
+    db.commit()
 
 if __name__ == "__main__":
-    # Allows for command line interaction with Flask application
-    with app.app_context():
-        main()
+    main()

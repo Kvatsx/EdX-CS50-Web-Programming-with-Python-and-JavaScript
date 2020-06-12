@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block head %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='forms.css') }}">
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="row custom-forms-layout">
+			
+			<!-- Login Page -->
+			<div class="col-12 custom-forms">
+				<h3 class="heading">Login Form</h3>
+				<form action="{{ url_for('login') }}" method="post">
+					<div class="form-group">
+						<label for="LoginInputEmail">Email address</label>
+						<input type="email" class="form-control" name="LoginInputEmail" id="LoginInputEmail" aria-describedby="emailHelp" placeholder="Enter email">
+						<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+					</div>
+					<div class="form-group">
+						<label for="LoginInputPassword">Password</label>
+						<input type="password" class="form-control" name="LoginInputPassword" id="LoginInputPassword" placeholder="Password">
+					</div>
+					<button type="submit" class="btn btn-primary">Login</button>
+				</form>
+				<a href="{{ url_for('register') }}">Create a new account</a>
+			</div>
+
+		</div>
+	</div>
+	
+{% endblock %}
