@@ -18,3 +18,12 @@ body {
 .card-custom {
     max-width: 128px;
 }
+
+.nav-custom-items {
+    color: white;
+}
+
+.welcome {
+    padding-right: 30px;
+    font-weight: bold;
+}

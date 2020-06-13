@@ -115,10 +115,35 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route("/book/<isbn>")
+@app.route("/book/<isbn>", methods=["GET", "POST"])
 def book(isbn):
+    if 'user_id' not in session:
+        return redirect(url_for('error', message="Please Login First"))
+
     if isbn == None:
         return redirect(url_for('error', message="Invalid Isbn."))
+    #  add a review to table
+    if request.method == "POST":
+        review_title = request.form.get("reviewTitle")
+        review_desc = request.form.get("reviewDescription")
+        review_rating = request.form.get("rating")
+        if review_title == None or review_desc == None or review_rating == None:
+            return redirect(url_for("error", message=request.args.get('message')))
+        db.execute("INSERT INTO Reviews (rating, title, description, reviewer_id, reviewer_name, isbn) VALUES (:rating, :title, :description, :reviewer_id, :reviewer_name, :isbn)",{
+                "rating": int(review_rating), 
+                "title": review_title, 
+                "description": review_desc,
+                "reviewer_id": session.get('user_id'),
+                "reviewer_name": session.get('user_name'),
+                "isbn": isbn
+                })
+        db.commit()
+    
+    add_review = db.execute("SELECT * from Reviews WHERE reviewer_id = :user_id AND isbn = :isbn", {"user_id": session.get("user_id"), "isbn": isbn}).fetchone()
+    if add_review == None:
+        add_review = True
+    else:
+        add_review = False
     book = db.execute("SELECT * from Books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
     if book == None:
         return redirect(url_for('error', message="No book exists with this isbn: {}.".format(isbn)))
@@ -126,7 +151,7 @@ def book(isbn):
     ratings = getRequiredRatingData(isbn)
     if ratings == None:
         return redirect(url_for('error', message="Goodreads Api not working"))
-    return render_template("book.html", book=book, reviews=reviews, ratings=ratings)
+    return render_template("book.html", add_review=add_review, user_name=session.get('user_name'), book=book, reviews=reviews, ratings=ratings)
 
 
 
