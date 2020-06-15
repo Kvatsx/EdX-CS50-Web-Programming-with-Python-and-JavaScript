@@ -63,13 +63,11 @@ def login():
         if email == "" or password == "":
             return redirect(url_for('error', message="Empty fields are not allowed."))
 
-        user = db.execute("SELECT id, name, email FROM Users WHERE email = :email AND password = :password",{"email": email, "password": password}).fetchone()
+        user = db.execute("SELECT id, name FROM Users WHERE email = :email AND password = :password",{"email": email, "password": password}).fetchone()
         if user != None:
             user = list(user)
             print(user)
-            session['user_id'] = user[0]
-            session['user_name'] = user[1]
-            session['user_email'] = user[2]
+            session['user'] = user
             print(session)
             return redirect(url_for("home"))
         else:
@@ -86,15 +84,15 @@ def home():
             table_caption = "No results found."
         else:
             table_caption = "List of all the books with search query: {}".format(search)
-        return render_template("home.html", user_name=session.get('user_name'), books=books ,table_caption=table_caption)
+        return render_template("home.html", user_name=session.get('user')[1], books=books ,table_caption=table_caption)
     else:
         print("Logged in:", session)
-        if session.get('user_id') == None:
+        if 'user' not in session:
             print("Login now!")
             return redirect(url_for("login"))
         books = db.execute("SELECT * from Books").fetchall()
         print("Book Count:", len(books))
-        return render_template("home.html", user_name=session.get('user_name'), books=books ,table_caption=table_caption)
+        return render_template("home.html", user_name=session.get('user')[1], books=books ,table_caption=table_caption)
 
 @app.route("/error")
 def error():
@@ -106,18 +104,16 @@ def success():
 
 @app.route("/logout")
 def logout():
-    # session.pop("id", None)
-    # session.pop("user_name", None)
-    # session.pop("user_email", None)
-    session['user_id'] = None
-    session['user_name'] = None
-    session['user_email'] = None
+    print("[INFO] Logout called!")
+    print(session)
+    session.pop("user", None)
+    print(session)
     return redirect(url_for('index'))
 
 
 @app.route("/book/<isbn>", methods=["GET", "POST"])
 def book(isbn):
-    if 'user_id' not in session:
+    if 'user' not in session:
         return redirect(url_for('error', message="Please Login First"))
 
     if isbn == None:
@@ -133,13 +129,13 @@ def book(isbn):
                 "rating": int(review_rating), 
                 "title": review_title, 
                 "description": review_desc,
-                "reviewer_id": session.get('user_id'),
-                "reviewer_name": session.get('user_name'),
+                "reviewer_id": session.get('user')[0],
+                "reviewer_name": session.get('user')[1],
                 "isbn": isbn
                 })
         db.commit()
     
-    add_review = db.execute("SELECT * from Reviews WHERE reviewer_id = :user_id AND isbn = :isbn", {"user_id": session.get("user_id"), "isbn": isbn}).fetchone()
+    add_review = db.execute("SELECT * from Reviews WHERE reviewer_id = :user_id AND isbn = :isbn", {"user_id": session.get("user")[0], "isbn": isbn}).fetchone()
     if add_review == None:
         add_review = True
     else:
@@ -151,7 +147,7 @@ def book(isbn):
     ratings = getRequiredRatingData(isbn)
     if ratings == None:
         return redirect(url_for('error', message="Goodreads Api not working"))
-    return render_template("book.html", add_review=add_review, user_name=session.get('user_name'), book=book, reviews=reviews, ratings=ratings)
+    return render_template("book.html", add_review=add_review, user_name=session.get('user')[1], book=book, reviews=reviews, ratings=ratings)
 
 
 
