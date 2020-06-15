@@ -78,15 +78,15 @@ def login():
 
 @app.route("/home", methods=["GET", "POST"])
 def home():
+    table_caption = "List of all the books"
     if request.method == "POST":
         search = request.form.get("searchQuery")
-        try:
-            search = int(search)
-            books = db.execute("SELECT * from Books WHERE CAST(year AS TEXT) LIKE :search", {"search": '%{}%'.format(search)}).fetchall()
-            return render_template("home.html", user_name=session.get('user_name'), books=books)
-        except ValueError:
-            books = db.execute("SELECT * from Books WHERE LOWER(isbn) LIKE :search OR LOWER(title) LIKE :search OR LOWER(author) LIKE :search", {"search": '%{}%'.format(search)}).fetchall()
-            return render_template("home.html", user_name=session.get('user_name'), books=books)
+        books = db.execute("SELECT * from Books WHERE LOWER(isbn) LIKE :search OR LOWER(title) LIKE :search OR LOWER(author) LIKE :search OR CAST(year AS TEXT) LIKE :search", {"search": '%{}%'.format(search.lower())}).fetchall()
+        if len(books) == 0:
+            table_caption = "No results found."
+        else:
+            table_caption = "List of all the books with search query: {}".format(search)
+        return render_template("home.html", user_name=session.get('user_name'), books=books ,table_caption=table_caption)
     else:
         print("Logged in:", session)
         if session.get('user_id') == None:
@@ -94,7 +94,7 @@ def home():
             return redirect(url_for("login"))
         books = db.execute("SELECT * from Books").fetchall()
         print("Book Count:", len(books))
-        return render_template("home.html", user_name=session.get('user_name'), books=books)
+        return render_template("home.html", user_name=session.get('user_name'), books=books ,table_caption=table_caption)
 
 @app.route("/error")
 def error():
@@ -160,13 +160,13 @@ def book(isbn):
 def resource_not_found(e):
     return jsonify(error=str(e)), 404
 
-@app.route("/api/<isbn>")
+@app.route("/api/<isbn>", methods=["GET"])
 def api(isbn):
     if isbn == None:
         abort(404, description="isbn is None")
     book = db.execute("SELECT * from Books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
     if book == None:
-        abort(404, description="No book exist with this isbn:{} number".format(isbn))
+        abort(404, description="No book exist with this isbn: {} number".format(isbn))
     reviews = db.execute("SELECT COUNT(*) from Reviews WHERE isbn = :isbn", {"isbn": isbn}).fetchall()
     rating = getRequiredRatingData(isbn)
     return jsonify({

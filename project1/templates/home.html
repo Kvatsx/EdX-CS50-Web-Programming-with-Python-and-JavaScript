@@ -22,42 +22,43 @@
     </nav>
 
     <div class="container">
-        <div class="row mb-3 search-box">
-            <div class="col-12 col-sm-12">
-                <form action="{{ url_for('home') }}"class="form-inline" method="POST">
-                    <div class="form-group mr-2">
-                        <label for="searchQuery" class="sr-only">Enter book isbn number | title | author | year</label>
-                        <input type="text" class="form-control mr-auto" name="searchQuery" id="searchQuery" placeholder="Enter book isbn number | title | author | year">
-                    </div>
-                    <!-- <input type="text" class="search-bar" name="searchQuery" id="searchQuery" placeholder="Enter book isbn number | title | author | year"> -->
-
-                    <button type="submit" class="btn btn-primary search-button">Search</button>
-                </form>
+        <form action="{{ url_for('home') }}" method="POST">
+            <div class="form-group row my-3">
+                <div class="col-5 col-sm-5 offset-2">
+                    <input type="text" class="form-control" name="searchQuery" id="searchQuery" placeholder="Search using book isbn | title | author | year">
+                </div>
+                <div class="col-3 col-sm-3 justify-content-center">
+                    <button type="submit" class="btn btn-primary btn-block">Search</button>
+                </div>
             </div>
-        </div>
+        </form>
+            
         <div class="row">
-            <table class="table table-striped">
-                <thead class="thead-dark">
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Isbn</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Author</th>
-                    <th scope="col">Year</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {% for book in books %}
-                        <tr class="click">
-                            <th scope="row">{{ loop.index }}</th>
-                            <td><a href="{{ url_for('book', isbn=book.isbn) }}">{{ book.isbn }}</a></td>
-                            <td>{{ book.title }}</td>
-                            <td>{{ book.author }}</td>
-                            <td>{{ book.year }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-              </table>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <caption>{{ table_caption }}</caption>
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Isbn</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Year</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in books %}
+                            <tr class="click">
+                                <th scope="row">{{ loop.index }}</th>
+                                <td><a href="{{ url_for('book', isbn=book.isbn) }}">{{ book.isbn }}</a></td>
+                                <td>{{ book.title }}</td>
+                                <td>{{ book.author }}</td>
+                                <td>{{ book.year }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+            </div>
         </div>
     </div>
 	
