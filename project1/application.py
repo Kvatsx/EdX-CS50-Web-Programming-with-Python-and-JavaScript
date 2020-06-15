@@ -152,17 +152,15 @@ def book(isbn):
 
 
 # API
-@app.errorhandler(404)
-def resource_not_found(e):
-    return jsonify(error=str(e)), 404
+# @app.errorhandler(404)
+# def resource_not_found(e):
+#     return jsonify(error=str(e)), 404
 
 @app.route("/api/<isbn>", methods=["GET"])
 def api(isbn):
-    if isbn == None:
-        abort(404, description="isbn is None")
     book = db.execute("SELECT * from Books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
     if book == None:
-        abort(404, description="No book exist with this isbn: {} number".format(isbn))
+        return jsonify({"error": "Invalid isbn"}), 404
     reviews = db.execute("SELECT COUNT(*) from Reviews WHERE isbn = :isbn", {"isbn": isbn}).fetchall()
     rating = getRequiredRatingData(isbn)
     return jsonify({
