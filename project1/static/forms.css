@@ -4,10 +4,11 @@
 
 .heading {
     font-weight: bold;
+    padding: 20px 20px 20px 20px;
 }
 
 .custom-forms {
-    border: 1px solid black;
     margin: 20px 20px 20px 20px;
-    padding: 30px 30px 30px 30px;
+    margin-top: 80px;
+    padding: 40px 40px 40px 40px;
 }
