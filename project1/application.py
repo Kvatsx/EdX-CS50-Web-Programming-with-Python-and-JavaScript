@@ -79,7 +79,7 @@ def home():
     table_caption = "List of all the books"
     if request.method == "POST":
         search = request.form.get("searchQuery")
-        books = db.execute("SELECT * from Books WHERE LOWER(isbn) LIKE :search OR LOWER(title) LIKE :search OR LOWER(author) LIKE :search OR CAST(year AS TEXT) LIKE :search", {"search": '%{}%'.format(search.lower())}).fetchall()
+        books = db.execute("SELECT * from Books WHERE LOWER(isbn) LIKE :search OR LOWER(title) LIKE :search OR LOWER(author) LIKE :search", {"search": '%{}%'.format(search.lower())}).fetchall()
         if len(books) == 0:
             table_caption = "No results found."
         else:

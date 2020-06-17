@@ -26,9 +26,9 @@ def main():
 def create_tables():
 
     # Clean Database
-    db.execute("DROP TABLE Users;")
-    db.execute("DROP TABLE Books;")
-    db.execute("DROP TABLE Reviews;")
+    # db.execute("DROP TABLE Users;")
+    # db.execute("DROP TABLE Books;")
+    # db.execute("DROP TABLE Reviews;")
 
     # Create Tables
     db.execute('''
