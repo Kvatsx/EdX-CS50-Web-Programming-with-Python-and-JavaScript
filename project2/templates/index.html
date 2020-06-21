@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block head %}
+	<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="row custom-forms-layout">
+			
+			<!-- Displau Name Page -->
+			<div class="col-12 col-sm-8 custom-forms offset-2">
+				<div class="card">
+					<!-- <h3 class="card-header bg-dark text-white">Display Name</h3> -->
+					<div class="card-body">
+						<form action="{{ url_for('index') }}" method="post">
+							<div class="form-group">
+								<label for="displayName">Display Name</label>
+								<input type="text" class="form-control" name="displayName" id="displayName" aria-describedby="nameHelp" placeholder="your display name">
+								<small id="nameHelp" class="form-text text-muted">This name would be visible to others.</small>
+							</div>
+							<button type="submit" class="btn btn-primary mb-3">Continue</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+{% endblock %}

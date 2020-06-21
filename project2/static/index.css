@@ -1,0 +1,14 @@
+.custom-forms-layout {
+    justify-content: center;
+}
+
+.heading {
+    font-weight: bold;
+    padding: 20px 20px 20px 20px;
+}
+
+.custom-forms {
+    margin: 20px 20px 20px 20px;
+    margin-top: 80px;
+    padding: 40px 40px 40px 40px;
+}
