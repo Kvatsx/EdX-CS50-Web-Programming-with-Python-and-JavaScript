@@ -1,0 +1,45 @@
+.container-fluid {
+    height: 100vh;
+}
+
+.full-height {
+    height: 100%;
+}
+
+.channels {
+    height: 100%;
+    background-color: #2c2c2c;
+}
+
+
+.messages {
+    height: 100%;
+}
+
+.cHeading {
+    height: 10%;
+    color: white;
+}
+
+.mHeading {
+    height: 10%;
+    text-align: center;
+    align-items: center;
+}
+
+.chat-box {
+    height: 70%;
+    align-items: center;
+}
+
+.mssg {
+    height: 10%;
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    align-items: center;
+}
+
+.border {
+    border: solid 2px white;
+}

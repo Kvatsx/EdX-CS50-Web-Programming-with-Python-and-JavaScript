@@ -20,3 +20,4 @@ def index():
 def home():
     return render_template('home.html', name="Kv")
 
+# https://bootsnipp.com/snippets/1ea0N

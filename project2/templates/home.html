@@ -1,14 +1,53 @@
 {% extends "layout.html" %}
 
 {% block head %}
-	<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock %}
 
 {% block body %}
-	<div class="container">
-		<div>
-            Hello {{ name }}
-        </div>
+	<div class="container-fluid">
+		<div class="row full-height">
+			<div class="col-12 col-sm-2 channels">
+				<div class="row cHeading align-items-center">
+					<div class="col-9">
+						<h3 class="font-weight-bold">Channels</h3>
+					</div>
+					<div class="col-3">
+						<button type="button" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i></button>
+					</div>
+				</div>
+				<hr style="background-color: white;">
+				<div class="row">
+					<div id="channelsList" class="btn-group-vertical btn-block" role="group" aria-label="Channels">
+						<!-- <button type="button" class="btn btn-primary">Channel 1</button>
+						<button type="button" class="btn btn-primary">Channel 2</button>
+						<button type="button" class="btn btn-primary">Channel 3</button> -->
+					</div>
+				</div>
+			</div>
+			<div class="col-12 col-sm-8 offset-1 messages">
+				<div class="row mHeading">
+					<div class="col-12">
+						<h3 class="font-weight-bolder">Messages</h3>
+					</div>
+				</div>
+				<hr style="background-color: #2c2c2c;">
+				<div class="row chat-box">
+					<div class="col-12">
+						Chat box
+					</div>
+				</div>
+				<div class="row mssg">
+					<div class="col-12 col-sm-10">
+						<input type="text" class="form-control" name="message" id="message" placeholder="Enter your message">
+					</div>
+					<div class="col-12 col-sm-2">
+						<button id="send" type="button" class="btn btn-block btn-success"><i class="fa fa-paper-plane" aria-hidden="true"></i>						</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	
+	<script src="{{ url_for('static', filename='js/home.js') }}"></script>
 {% endblock %}

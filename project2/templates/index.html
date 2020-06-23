@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block head %}
-	<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -15,16 +15,16 @@
 					<div class="card-body">
 						<form action="{{ url_for('index') }}" method="post">
 							<div class="form-group">
-								<label for="displayName">Display Name</label>
-								<input type="text" class="form-control" name="displayName" id="displayName" aria-describedby="nameHelp" placeholder="your display name">
+								<label for="name">Display Name</label>
+								<input type="text" class="form-control" name="name" id="displayName" aria-describedby="nameHelp" placeholder="your display name">
 								<small id="nameHelp" class="form-text text-muted">This name would be visible to others.</small>
 							</div>
-							<button type="submit" class="btn btn-primary mb-3">Continue</button>
+							<button id="continue" type="submit" class="btn btn-success mb-3">Continue</button>
 						</form>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	
+	<script src="{{ url_for('static', filename='js/displayName.js') }}"></script>
 {% endblock %}
