@@ -8,25 +8,28 @@
 {% block body %}
 	<div class="container-fluid">
 		<div class="row full-height">
-			<div class="col-12 col-sm-2 channels">
+			<div class="col-12 col-sm-3 col-md-3 channels">
 				<div class="row cHeading align-items-center">
 					<div class="col-9">
 						<h3 class="font-weight-bold">Channels</h3>
 					</div>
 					<div class="col-3">
-						<button type="button" class="btn btn-sm btn-danger"><i class="fa fa-plus"></i></button>
+						<button type="button" class="btn btn-block btn-danger" data-toggle="modal" data-target="#newChannel"><i class="fa fa-plus"></i></button>
 					</div>
 				</div>
 				<hr style="background-color: white;">
 				<div class="row">
 					<div id="channelsList" class="btn-group-vertical btn-block" role="group" aria-label="Channels">
+						{% for item in channels %}
+							<button type="button" class="btn btn-primary">{{ item }}</button>
+						{% endfor %}
 						<!-- <button type="button" class="btn btn-primary">Channel 1</button>
 						<button type="button" class="btn btn-primary">Channel 2</button>
 						<button type="button" class="btn btn-primary">Channel 3</button> -->
 					</div>
 				</div>
 			</div>
-			<div class="col-12 col-sm-8 offset-1 messages">
+			<div class="col-12 col-sm-9 col-md-7 offset-md-1 messages">
 				<div class="row mHeading">
 					<div class="col-12">
 						<h3 class="font-weight-bolder">Messages</h3>
@@ -39,15 +42,46 @@
 					</div>
 				</div>
 				<div class="row mssg">
-					<div class="col-12 col-sm-10">
+					<div class="col-12 col-sm-9">
 						<input type="text" class="form-control" name="message" id="message" placeholder="Enter your message">
 					</div>
-					<div class="col-12 col-sm-2">
-						<button id="send" type="button" class="btn btn-block btn-success"><i class="fa fa-paper-plane" aria-hidden="true"></i>						</button>
+					<div class="col-12 col-sm-3">
+						<button id="send" type="button" class="btn btn-block btn-success"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<div id="newChannel" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="content">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Create a channel</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="addChannel">
+                        <div class="form-group row">
+                            <label for="channelName" class="col-12 col-md-4 col-form-label pt-0">Channel Name</label>
+                            <div class="col-12 col-md-8 mb-2">
+                                <input type="text" class="form-control" id="channelName" name="channelName" placeholder="Enter channel name">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="offset-md-4 col-md-10">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button id="createBtn" type="button" class="btn btn-primary">Create</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+	</div>
+	<script id="channelBtn" type="text/x-handlebars-template">
+		<button type="button" class="btn btn-primary">{{ channelName }}</button>  
+	</script>
 	<script src="{{ url_for('static', filename='js/home.js') }}"></script>
 {% endblock %}

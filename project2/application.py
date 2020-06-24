@@ -7,6 +7,8 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
+Channels = []
+Chats = {}
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -18,6 +20,19 @@ def index():
 
 @app.route('/home')
 def home():
-    return render_template('home.html', name="Kv")
+    print("Channels:", Channels)
+    return render_template('home.html', channels=Channels)
+
+@socketio.on("addChannel")
+def addChannel(channelName):
+    name = channelName['channelName']
+    if (name not in Channels):
+        Channels.append(name)
+        Chats[name] = []
+        print(1)
+        emit("createChannel", channelName, broadcast=True)
+    else:
+        print(2)
+        emit("createAlert", "Channel with this name already exist.")
 
 # https://bootsnipp.com/snippets/1ea0N
