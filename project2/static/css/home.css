@@ -28,12 +28,10 @@
 .mHeading {
     height: 10%;
     text-align: center;
-    align-items: center;
 }
 
 .chat-box {
     height: 70%;
-    align-items: center;
 }
 
 .mssg {
@@ -46,4 +44,34 @@
 
 .border {
     border: solid 2px white;
+}
+
+.chat-list {
+    overflow-y: scroll;
+    padding: 10px;
+    box-shadow: 5px #ededed
+    /* background-color: lightblue; */
+}
+
+.recv-mssg {
+    width: 75%;
+    float: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.sent-mssg {
+    width: 75%;
+    float: right;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.card-title {
+    font-weight: bold;
+}
+
+.chat-item {
+    background-color: #ebebeb;
+    border-radius: 3px;
+    padding: 5px;
 }

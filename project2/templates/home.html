@@ -23,9 +23,6 @@
 						{% for item in channels %}
 							<button type="button" class="btn btn-primary">{{ item }}</button>
 						{% endfor %}
-						<!-- <button type="button" class="btn btn-primary">Channel 1</button>
-						<button type="button" class="btn btn-primary">Channel 2</button>
-						<button type="button" class="btn btn-primary">Channel 3</button> -->
 					</div>
 				</div>
 			</div>
@@ -37,18 +34,49 @@
 				</div>
 				<hr style="background-color: #2c2c2c;">
 				<div class="row chat-box">
-					<div class="col-12">
-						Chat box
+					<div id="chatList" class="col-12 full-height chat-list">
+						<!-- Chat item -->
+						<h3>Please select a channel to show chat.</h3>
+						<!-- <div class="card recv-mssg">
+							<div class="card-body">
+								<h6 class="card-title">Ramesh</h6>
+								<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+								<footer class="blockquote-footer">11:01 AM | June 9</footer>
+							</div>
+						</div>
+						<div class="card sent-mssg">
+							<div class="card-body">
+								<h6 class="card-title">Ramesh</h6>
+								<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+								<footer class="blockquote-footer">11:01 AM | June 9</footer>
+							</div>
+						</div>
+						<div class="card recv-mssg">
+							<div class="card-body">
+								<h6 class="card-title">Ramesh</h6>
+								<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+								<footer class="blockquote-footer">11:01 AM | June 9</footer>
+							</div>
+						</div>
+						<div class="card sent-mssg">
+							<div class="card-body">
+								<h6 class="card-title">Ramesh</h6>
+								<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+								<footer class="blockquote-footer">11:01 AM | June 9</footer>
+							</div>
+						</div> -->
 					</div>
 				</div>
-				<div class="row mssg">
-					<div class="col-12 col-sm-9">
-						<input type="text" class="form-control" name="message" id="message" placeholder="Enter your message">
+				<form id="mssgForm" class='mssg'>
+					<div class="form-group row">
+						<div class="col-12 col-sm-9">
+							<input type="text" class="form-control" name="message" id="message" placeholder="Enter your message">
+						</div>
+						<div class="col-12 col-sm-3">
+							<button id="send" type="submit" class="btn btn-block btn-success"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+						</div>
 					</div>
-					<div class="col-12 col-sm-3">
-						<button id="send" type="button" class="btn btn-block btn-success"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -81,7 +109,25 @@
         </div>
 	</div>
 	<script id="channelBtn" type="text/x-handlebars-template">
-		<button type="button" class="btn btn-primary">{{ channelName }}</button>  
+		<button type="button" class="btn btn-primary" onclick="showChats(this.innerHTML)">{% raw -%}{{ channelName }}{%- endraw %}</button>  
+	</script>
+	<script id="receivedMessage" type="text/x-handlebars-template">
+		<div class="card recv-mssg">
+			<div class="card-body">
+				<h6 class="card-title">{% raw -%}{{ name }}{%- endraw %}</h6>
+				<p class="card-text">{% raw -%}{{ mssg }}{%- endraw %}</p>
+				<footer class="blockquote-footer">{% raw -%}{{ time }} | {{ date }}{%- endraw %}</footer>
+			</div>
+		</div>
+	</script>
+	<script id="sentMessage" type="text/x-handlebars-template">
+		<div class="card sent-mssg">
+			<div class="card-body">
+				<h6 class="card-title">{% raw -%}{{ name }}{%- endraw %}</h6>
+				<p class="card-text">{% raw -%}{{ mssg }}{%- endraw %}</p>
+				<footer class="blockquote-footer">{% raw -%}{{ time }} | {{ date }}{%- endraw %}</footer>
+			</div>
+		</div>
 	</script>
 	<script src="{{ url_for('static', filename='js/home.js') }}"></script>
 {% endblock %}
