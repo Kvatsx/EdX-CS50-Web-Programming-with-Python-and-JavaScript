@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const message = document.querySelector("#message").value;
             console.log(message)
             socket.emit('addMessage', {'name': name, 'message': message, 'channelName': localStorage.getItem('current_channel')})
+            document.querySelector("#message").value = "";
             return false
         }
     });
@@ -30,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const content = template({'channelName': channelName['channelName']});
         console.log(content);
         document.querySelector("#channelsList").innerHTML += content;
-        showChats(channelName['channelName']);
+        // showChats(channelName['channelName']);
     });
 
     socket.on('createMessage', chat => {
@@ -45,11 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function showChats (name) {
     $("#chatList").empty();
+    document.querySelector("#channelname").innerHTML = name;
     localStorage.setItem('current_channel', name);
     console.log("ShowChats called " + name)
     const request = new XMLHttpRequest();
     console.log('/getChats/'+ name);
-    request.open('POST', '/getChats/'+ name);
+    request.open('POST', '/getChats');
     request.onload = () => {
         console.log('onload');
         const data = JSON.parse(request.responseText);
@@ -61,21 +63,20 @@ function showChats (name) {
             document.querySelector('#chatList').innerHTML = 'There was an error.';
         }
     }
+    const data = new FormData();
+    data.append('channelName', name);
+    request.send(data);
 }
 
 function addChat(item, index) {
-    console.log("mssg: " + item.message);
-    console.log(item.name + " | " + localStorage.getItem('name'));
     if (item.name.localeCompare(localStorage.getItem('name')) == 0) {
         const template = Handlebars.compile(document.querySelector('#sentMessage').innerHTML);
         const content = template({'name': item.name, 'mssg':item.message, 'time':item.time, 'date':item.date});
-        console.log(content);
         document.querySelector('#chatList').innerHTML += content;
     }
     else {
         const template = Handlebars.compile(document.querySelector('#receivedMessage').innerHTML);
         const content = template({'name': item.name, 'mssg':item.message, 'time':item.time, 'date':item.date});
-        console.log(content);
         document.querySelector('#chatList').innerHTML += content;
     }
 }

@@ -21,7 +21,7 @@
 				<div class="row">
 					<div id="channelsList" class="btn-group-vertical btn-block" role="group" aria-label="Channels">
 						{% for item in channels %}
-							<button type="button" class="btn btn-primary">{{ item }}</button>
+							<button type="button" class="btn btn-primary"  onclick="showChats(this.innerHTML)">{{ item }}</button>
 						{% endfor %}
 					</div>
 				</div>
@@ -33,38 +33,13 @@
 					</div>
 				</div>
 				<hr style="background-color: #2c2c2c;">
+				<div class="row">
+					<h3 id="channelname"> </h3>
+				</div>
 				<div class="row chat-box">
 					<div id="chatList" class="col-12 full-height chat-list">
 						<!-- Chat item -->
 						<h3>Please select a channel to show chat.</h3>
-						<!-- <div class="card recv-mssg">
-							<div class="card-body">
-								<h6 class="card-title">Ramesh</h6>
-								<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-								<footer class="blockquote-footer">11:01 AM | June 9</footer>
-							</div>
-						</div>
-						<div class="card sent-mssg">
-							<div class="card-body">
-								<h6 class="card-title">Ramesh</h6>
-								<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-								<footer class="blockquote-footer">11:01 AM | June 9</footer>
-							</div>
-						</div>
-						<div class="card recv-mssg">
-							<div class="card-body">
-								<h6 class="card-title">Ramesh</h6>
-								<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-								<footer class="blockquote-footer">11:01 AM | June 9</footer>
-							</div>
-						</div>
-						<div class="card sent-mssg">
-							<div class="card-body">
-								<h6 class="card-title">Ramesh</h6>
-								<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-								<footer class="blockquote-footer">11:01 AM | June 9</footer>
-							</div>
-						</div> -->
 					</div>
 				</div>
 				<form id="mssgForm" class='mssg'>

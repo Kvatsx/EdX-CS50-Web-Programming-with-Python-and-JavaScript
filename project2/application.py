@@ -25,7 +25,7 @@ def index():
 
 @app.route('/home')
 def home():
-    print("Channels:", Channels)
+    # print("Channels:", Channels)
     return render_template('home.html', channels=Channels)
 
 
@@ -35,6 +35,7 @@ def addChannel(channelName):
     if (name not in Channels):
         Channels.append(name)
         Chats[name] = []
+        print("Channel Created", Channels)
         emit("createChannel", channelName, broadcast=True)
     else:
         emit("createAlert", "Channel with this name already exist.")
@@ -57,10 +58,11 @@ def addMessage(data):
     emit('createMessage', chat, broadcast=True)
 
 
-@app.route('/getChats/<channelName>', methods=["GET", "POST"])
-def getChats(channelName):
+@app.route('/getChats', methods=["POST"])
+def getChats():
     print("Channels:", Channels)
     print("Chat:", Chats.keys())
+    channelName = request.form.get("channelName")
     if channelName not in Chats:
         return jsonify({'success': False})
     return jsonify({'success': True, 'chats': Chats[channelName]})
