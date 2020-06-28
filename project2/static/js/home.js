@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     emptyMessageHandler()
 
     if (localStorage.getItem('current_channel')) {
-        showChats(localStorage.getItem('current_channel', name));
+        showChats(localStorage.getItem('current_channel'));
     }
 
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
@@ -25,6 +25,34 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector("#message").value = "";
             return false
         }
+
+        var btns = document.querySelectorAll('button.close.delM');
+        console.log(btns);
+        btns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var parent = this.parentElement;
+                var temp = this.parentElement.childNodes;
+                // temp.forEach((el, index) => {
+                //     console.log(el.innerHTML + " " + index);
+                // })
+                var mssg = {};
+                mssg['name'] = temp[5].innerHTML;
+                mssg['message'] = temp[7].innerHTML;
+                var str = temp[9].innerHTML;
+                str = str.split(" | "); 
+                mssg['time'] = str[0];
+                mssg['date'] = str[1];
+                mssg['channelName'] = localStorage.getItem('current_channel');
+        
+                // temp[7].innerHTML = "Message deleted!";
+                // parent.removeChild(temp[5]);
+                // parent.removeChild(temp[8]);
+                // parent.removeChild(temp[3]);
+                console.log("COOL");
+                socket.emit('delete message', mssg);
+            })
+        })
+
     });
     socket.on('createChannel', channelName => {
         const template = Handlebars.compile(document.querySelector('#channelBtn').innerHTML);
@@ -37,11 +65,64 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('createMessage', chat => {
         console.log(chat)
         addChat(chat, 0);
-    })
+        var btns = document.querySelectorAll('button.close.delM');
+        console.log(btns);
+        btns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var parent = this.parentElement;
+                var temp = this.parentElement.childNodes;
+                // temp.forEach((el, index) => {
+                //     console.log(el.innerHTML + " " + index);
+                // })
+                var mssg = {};
+                mssg['name'] = temp[5].innerHTML;
+                mssg['message'] = temp[7].innerHTML;
+                var str = temp[9].innerHTML;
+                str = str.split(" | "); 
+                mssg['time'] = str[0];
+                mssg['date'] = str[1];
+                mssg['channelName'] = localStorage.getItem('current_channel');
+        
+                // temp[7].innerHTML = "Message deleted!";
+                // parent.removeChild(temp[5]);
+                // parent.removeChild(temp[8]);
+                // parent.removeChild(temp[3]);
+                console.log("COOL");
+                socket.emit('delete message', mssg);
+            })
+        })
+    });
 
     socket.on('createAlert', message => {
         alert(message)
+    });
+
+    socket.on('updateChats', channel_name => {
+        if (localStorage.getItem('current_channel').localeCompare(channel_name) == 0) {
+            showChats(channel_name);
+        }
     })
+
+    // $('button.delM').onclick(function(event) {
+    //     var parent = this.parentElement;
+    //     var temp = this.parentElement.childNodes;
+    //     var mssg = {};
+    //     mssg['name'] = temp[3].innerHTML;
+    //     mssg['message'] = temp[5].innerHTML;
+    //     var str = temp[7].innerHTML;
+    //     str = str.split(" | "); 
+    //     mssg['time'] = str[0];
+    //     mssg['date'] = str[1];
+
+    //     temp[5].innerHTML = "Message deleted!";
+    //     parent.removeChild(temp[3]);
+    //     parent.removeChild(temp[6]);
+    //     parent.removeChild(temp[1]);
+    //     console.log(mssg);
+    //     console.log("ok");
+    //     socket.emit('delete message', mssg);
+    //     return false;
+    // })
 });
 
 function showChats (name) {
@@ -69,16 +150,60 @@ function showChats (name) {
 }
 
 function addChat(item, index) {
-    if (item.name.localeCompare(localStorage.getItem('name')) == 0) {
-        const template = Handlebars.compile(document.querySelector('#sentMessage').innerHTML);
-        const content = template({'name': item.name, 'mssg':item.message, 'time':item.time, 'date':item.date});
-        document.querySelector('#chatList').innerHTML += content;
+    Handlebars.registerHelper('ifCond', function(v1, operator, v2, options) {
+        switch (operator) {
+            case '==':
+                console.log(v1 + " " + v2);
+                return (v1 == v2) ? options.fn(this) : options.inverse(this);
+            case '===':
+                return (v1 === v2) ? options.fn(this) : options.inverse(this);
+            case '!=':
+                return (v1 != v2) ? options.fn(this) : options.inverse(this);
+            case '!==':
+                return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+            case '<':
+                return (v1 < v2) ? options.fn(this) : options.inverse(this);
+            case '<=':
+                return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+            case '>':
+                return (v1 > v2) ? options.fn(this) : options.inverse(this);
+            case '>=':
+                return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+            case '&&':
+                return (v1 && v2) ? options.fn(this) : options.inverse(this);
+            case '||':
+                return (v1 || v2) ? options.fn(this) : options.inverse(this);
+            default:
+                return options.inverse(this);
+        }
+    });
+    if (localStorage.getItem('current_channel').localeCompare(item.channel_name) == 0) {
+        if (item.name.localeCompare(localStorage.getItem('name')) == 0) {
+            if (!item.notDeleted) {
+                const template = Handlebars.compile(document.querySelector('#sentMessage').innerHTML);
+                const content = template({'name': null, 'mssg':item.message, 'time':item.time, 'date':item.date, 'notDeleted': item.notDeleted});
+                document.querySelector('#chatList').innerHTML += content;
+            }
+            else {
+                const template = Handlebars.compile(document.querySelector('#sentMessage').innerHTML);
+                const content = template({'name': item.name, 'mssg':item.message, 'time':item.time, 'date':item.date, 'notDeleted': item.notDeleted});
+                document.querySelector('#chatList').innerHTML += content;
+            }
+        }
+        else {
+            if (!item.notDeleted) {
+                const template = Handlebars.compile(document.querySelector('#receivedMessage').innerHTML);
+                const content = template({'name': null, 'mssg':item.message, 'time':item.time, 'date':item.date, 'notDeleted': item.notDeleted});
+                document.querySelector('#chatList').innerHTML += content;
+            }
+            else {
+                const template = Handlebars.compile(document.querySelector('#receivedMessage').innerHTML);
+                const content = template({'name': item.name, 'mssg':item.message, 'time':item.time, 'date':item.date, 'notDeleted': item.notDeleted});
+                document.querySelector('#chatList').innerHTML += content;
+            }
+        }
     }
-    else {
-        const template = Handlebars.compile(document.querySelector('#receivedMessage').innerHTML);
-        const content = template({'name': item.name, 'mssg':item.message, 'time':item.time, 'date':item.date});
-        document.querySelector('#chatList').innerHTML += content;
-    }
+
 }
 
 function emptyMessageHandler () {
@@ -89,4 +214,22 @@ function emptyMessageHandler () {
         else
             document.querySelector('#send').disabled = true;
     };
+}
+
+function deleteMssg(x) {
+    var parent = x.parentElement;
+    var temp = x.parentElement.childNodes;
+    var mssg = {};
+    mssg['name'] = temp[3].innerHTML;
+    mssg['message'] = temp[5].innerHTML;
+    var str = temp[7].innerHTML;
+    str = str.split(" | "); 
+    mssg['time'] = str[0];
+    mssg['date'] = str[1];
+
+    temp[5].innerHTML = "Message deleted!";
+    parent.removeChild(temp[3]);
+    parent.removeChild(temp[6]);
+    parent.removeChild(temp[1]);
+    console.log(mssg);
 }

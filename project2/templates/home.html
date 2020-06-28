@@ -9,6 +9,7 @@
 	<div class="container-fluid">
 		<div class="row full-height">
 			<div class="col-12 col-sm-3 col-md-3 channels">
+				<!-- Channels -->
 				<div class="row cHeading align-items-center">
 					<div class="col-9">
 						<h3 class="font-weight-bold">Channels</h3>
@@ -89,18 +90,37 @@
 	<script id="receivedMessage" type="text/x-handlebars-template">
 		<div class="card recv-mssg">
 			<div class="card-body">
-				<h6 class="card-title">{% raw -%}{{ name }}{%- endraw %}</h6>
-				<p class="card-text">{% raw -%}{{ mssg }}{%- endraw %}</p>
-				<footer class="blockquote-footer">{% raw -%}{{ time }} | {{ date }}{%- endraw %}</footer>
+				{% raw -%}
+				{{#ifCond name '!=' null}}
+					<h6 class="card-title">{{ name }}</h6>
+				{{/ifCond}}
+				<p class="card-text">{{ mssg }}</p>
+
+				{{#ifCond name '!=' None}}
+					<footer class="blockquote-footer">{{ time }} | {{ date }}</footer>
+				{{/ifCond}}
+				{%- endraw %}
 			</div>
 		</div>
 	</script>
 	<script id="sentMessage" type="text/x-handlebars-template">
 		<div class="card sent-mssg">
 			<div class="card-body">
-				<h6 class="card-title">{% raw -%}{{ name }}{%- endraw %}</h6>
-				<p class="card-text">{% raw -%}{{ mssg }}{%- endraw %}</p>
-				<footer class="blockquote-footer">{% raw -%}{{ time }} | {{ date }}{%- endraw %}</footer>
+				<!-- onclick="deleteMssg(this)" -->
+				{% raw -%}
+				{{#ifCond notDeleted '==' true}}
+					<button type="button" class="close delM" ><i class="fa fa-trash" aria-hidden="true"></i></button>
+				{{/ifCond}}
+
+				{{#ifCond name '!=' null}}
+					<h6 class="card-title">{{ name }}</h6>
+				{{/ifCond}}
+				<p class="card-text">{{ mssg }}</p>
+
+				{{#ifCond name '!=' None}}
+					<footer class="blockquote-footer">{{ time }} | {{ date }}</footer>
+				{{/ifCond}}
+				{%- endraw %}
 			</div>
 		</div>
 	</script>

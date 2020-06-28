@@ -51,11 +51,13 @@ def addMessage(data):
     time = now.strftime('%H:%M')
     chat['date'] = date
     chat['time'] = time
+    chat['notDeleted'] = True
+    chat['channel_name'] = data['channelName']
 
     if (len(Chats[data['channelName']]) == 100):
         Chats[data['channelName']].pop(0)
     Chats[data['channelName']].append(chat)
-    emit('createMessage', chat, broadcast=True)
+    emit('createMessage', (chat, data['channelName']), broadcast=True)
 
 
 @app.route('/getChats', methods=["POST"])
@@ -66,6 +68,19 @@ def getChats():
     if channelName not in Chats:
         return jsonify({'success': False})
     return jsonify({'success': True, 'chats': Chats[channelName]})
+
+@socketio.on("delete message")
+def deleteM(data):
+    temp = Chats[data['channelName']]
+    for e in temp:
+        if (e['name'] == data['name'] and e['message'] == data['message'] and e['date'] == data['date'] and e['time'] == data['time']):
+            e['message'] = "Message deleted!"
+            e['date'] = None
+            e['time'] = None
+            e['notDeleted'] = False
+            break
+    print(data)
+    emit("updateChats", data['channelName'],  broadcast=True)
 
 
 
